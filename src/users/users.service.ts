@@ -16,10 +16,14 @@ export class UsersService {
   };
 
   async create(createUserDto: CreateUserDto) {
-    const hashPass = this.getHashPassword(createUserDto.password);
-    createUserDto.password = hashPass;
-    const createdUser = await this.UserModel.create(createUserDto);
-    return createdUser;
+    try {
+      const hashPass = this.getHashPassword(createUserDto.password);
+      createUserDto.password = hashPass;
+      const createdUser = await this.UserModel.create(createUserDto);
+      return createdUser;
+    } catch (error) {
+      return { status: 'Failed to create a new user', error: error };
+    }
   }
 
   async findAll() {
@@ -32,12 +36,17 @@ export class UsersService {
   }
 
   async update(updateUserDto: UpdateUserDto) {
-    if (!mongoose.isValidObjectId(updateUserDto._id)) return 'Not found user!';
-    const user = await this.UserModel.findByIdAndUpdate(
-      updateUserDto._id,
-      updateUserDto,
-    );
-    return user;
+    try {
+      if (!mongoose.isValidObjectId(updateUserDto._id))
+        return 'Not found user!';
+      const user = await this.UserModel.findByIdAndUpdate(
+        updateUserDto._id,
+        updateUserDto,
+      );
+      return user;
+    } catch (error) {
+      return { status: 'Failed to update user', error: error };
+    }
   }
 
   async remove(id: string) {

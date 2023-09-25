@@ -30,11 +30,11 @@ export class UsersService {
     return await this.UserModel.findById(id);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    if (updateUserDto?.password) {
-      updateUserDto.password = this.getHashPassword(updateUserDto.password);
-    }
-    const user = await this.UserModel.findByIdAndUpdate(id, updateUserDto);
+  async update(updateUserDto: UpdateUserDto) {
+    const user = await this.UserModel.findByIdAndUpdate(
+      updateUserDto._id,
+      updateUserDto,
+    );
     return user;
   }
 

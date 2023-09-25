@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
@@ -27,10 +27,12 @@ export class UsersService {
   }
 
   async findOne(id: string) {
+    if (!mongoose.isValidObjectId(id)) return 'Not found user!';
     return await this.UserModel.findById(id);
   }
 
   async update(updateUserDto: UpdateUserDto) {
+    if (!mongoose.isValidObjectId(updateUserDto._id)) return 'Not found user!';
     const user = await this.UserModel.findByIdAndUpdate(
       updateUserDto._id,
       updateUserDto,
@@ -39,6 +41,7 @@ export class UsersService {
   }
 
   async remove(id: string) {
+    if (!mongoose.isValidObjectId(id)) return 'Not found user!';
     return await this.UserModel.findByIdAndDelete(id);
   }
 }
